@@ -117,6 +117,17 @@ describe JSON::Lexer do
   it_lexes_int "0", 0
   it_lexes_int "1", 1
   it_lexes_int "1234", 1234
+
+  # [u8, u16, u32, u64, u128, i8, i16, i32, i64, i128]
+  it_lexes_int "0e1i32", 0
+  it_lexes_int "0E1i32", 0
+  it_lexes_int "0e+12i32", 0
+  it_lexes_int "1e2i32", 100
+  it_lexes_int "1E2i32", 100
+  it_lexes_int "1e+12i32", 1000000000000
+  it_lexes_int "-1.23e4i32", -1.23e4
+  it_lexes_int "-1.23e4i32", -1.23e4
+
   it_lexes_float "0.123", 0.123
   it_lexes_float "1234.567", 1234.567
   it_lexes_float "0e1", 0

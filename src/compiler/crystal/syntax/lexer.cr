@@ -1515,10 +1515,9 @@ module Crystal
           has_suffix = false
         end
       when 'e', 'E'
-        is_integer = false
         next_char
 
-        if current_char == '+' || current_char == '-'
+        if current_char == '+' || (negative_power = (current_char == '-'))
           next_char
         end
 
@@ -1533,9 +1532,16 @@ module Crystal
           next_char
         end
 
-        if current_char == 'f'
+        case current_char
+        when 'f'
+          is_integer = false
           suffix_size = consume_float_suffix
+        when 'i'
+          suffix_size = consume_int_suffix
+        when 'u'
+          suffix_size = consume_uint_suffix
         else
+          is_integer = false
           @token.number_kind = :f64
         end
       when 'f'
