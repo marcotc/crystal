@@ -1457,6 +1457,7 @@ module Crystal
       has_underscore = false
       is_integer = true
       has_suffix = true
+      scientific_separator_pos = -1
       suffix_size = 0
 
       while true
@@ -1532,6 +1533,8 @@ module Crystal
           next_char
         end
 
+        scientific_separator_pos = current_pos
+
         case current_char
         when 'f'
           is_integer = false
@@ -1540,7 +1543,7 @@ module Crystal
           suffix_size = consume_int_suffix
         when 'u'
           suffix_size = consume_uint_suffix
-        else
+        else 
           is_integer = false
           @token.number_kind = :f64
         end
@@ -1566,6 +1569,28 @@ module Crystal
       end
       string_value = string_value.delete('_') if has_underscore
 
+      if scientific_separator_pos != -1 && is_integer
+        coefficient_str, power_str = string_value.split(/[eE]/)
+        puts "string_value.size: #{string_value.size}"
+        puts "scientific_separator_pos: #{scientific_separator_pos}"
+        
+        coefficient = absolute_integer_value(coefficient_str, negative)
+        num_size = coefficient_str.size
+        num_size -= 1 if negative
+        
+        check_integer_literal_fits_in_size coefficient_str, num_size, negative, start
+
+        power = absolute_integer_value(power_str, false)
+
+        if negative
+          scientific_int_result = -coefficient * 10**power
+        else
+          scientific_int_result = coefficient * 10**power
+        end
+
+        string_value = scientific_int_result.to_s
+      end
+      
       if is_integer
         num_size = string_value.size
         num_size -= 1 if negative

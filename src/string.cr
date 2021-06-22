@@ -587,6 +587,7 @@ class String
     mul_overflow = ~0_u64 // base
     last_is_underscore = true
     invalid = false
+    scientific = false
 
     digits = (base == 62 ? CHAR_TO_DIGIT62 : CHAR_TO_DIGIT).to_unsafe
     while ptr.value != 0
@@ -600,6 +601,13 @@ class String
       last_is_underscore = false
       digit = digits[ptr.value]
       if digit == -1 || digit >= base
+        if (ptr.value.unsafe_chr == 'e' || ptr.value.unsafe_chr == 'E') && !scientific
+          raise ArgumentError.new("Scientific notation integer must be base 10: was #{base}") if base != 10
+          scientific = true
+          ptr += 1
+          next
+        end
+
         break
       end
 

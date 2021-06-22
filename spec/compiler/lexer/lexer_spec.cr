@@ -48,6 +48,14 @@ private def it_lexes_idents(idents)
   end
 end
 
+private def it_lexes_i8(values)
+  values.each { |value| it_lexes_number :i8, value }
+end
+
+private def it_lexes_i16(values)
+  values.each { |value| it_lexes_number :i16, value }
+end
+
 private def it_lexes_i32(values)
   values.each { |value| it_lexes_number :i32, value }
 end
@@ -156,9 +164,16 @@ describe "Lexer" do
                    "do?", "yield?", "return?", "unless?", "next?", "break?", "begin?"]
   it_lexes_idents ["def!", "if!", "else!", "elsif!", "end!", "true!", "false!", "class!", "while!",
                    "nil!", "do!", "yield!", "return!", "unless!", "next!", "break!", "begin!"]
+
+  it_lexes_i8 [["1e2i8", "1e2"]]
+  it_lexes_i16 [["1e4i16", "1e4"]]
   it_lexes_i32 ["1", ["0i32", "0"], ["1hello", "1"], "+1", "-1", "1234", "+1234", "-1234",
-                ["1.foo", "1"], ["1_000", "1000"], ["100_000", "100000"]]
-  it_lexes_i64 [["1i64", "1"], ["1_i64", "1"], ["1i64hello", "1"], ["+1_i64", "+1"], ["-1_i64", "-1"]]
+                ["1.foo", "1"], ["1_000", "1000"], ["100_000", "100000"],
+                ["1e9i32", "1e9"]
+              ]
+  it_lexes_i64 [["1i64", "1"], ["1_i64", "1"], ["1i64hello", "1"], ["+1_i64", "+1"], ["-1_i64", "-1"],
+                ["1e18i64", "1e18"]
+              ]
   it_lexes_i128 [["1i128", "1"], ["1_i128", "1"], ["1i128hello", "1"], ["+1_i128", "+1"], ["-1_i128", "-1"]]
   it_lexes_f32 [["0f32", "0"], ["0_f32", "0"], ["1.0f32", "1.0"], ["1.0f32hello", "1.0"],
                 ["+1.0f32", "+1.0"], ["-1.0f32", "-1.0"], ["-0.0f32", "-0.0"], ["1_234.567_890_f32", "1234.567890"]]
