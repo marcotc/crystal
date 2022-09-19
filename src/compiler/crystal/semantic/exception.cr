@@ -330,6 +330,12 @@ module Crystal
     end
 
     def undefined_instance_variable(node, owner, similar_name)
+      puts "node"
+      puts node
+      puts "owner"
+      puts owner
+      puts "similar_name"
+      puts similar_name
       common = String.build do |str|
         str << "can't infer the type of instance variable '#{node.name}' of #{owner.devirtualize}"
         if similar_name

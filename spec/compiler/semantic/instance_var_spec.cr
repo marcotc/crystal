@@ -1944,7 +1944,7 @@ describe "Semantic: instance var" do
 
       Foo.new.x
       ),
-      "can't infer the type of instance variable '@x' of Foo"
+      "undeclared instance variable '@x' of Foo assigned to Int32"
   end
 
   it "errors if declaring instance var and turns out to be nilable" do
