@@ -793,7 +793,12 @@ module Crystal
 
       value.accept self
 
-      var = lookup_instance_var target
+      begin
+        var = lookup_instance_var target
+      rescue ex : CodeError # TODO: replace with correct error type
+        ::raise TypeException.for_node(node, "BAD BAD TYPE", ex)
+      end
+
       if casted_value = check_automatic_cast(value, var.type, node)
         value = casted_value
       end

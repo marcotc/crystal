@@ -61,7 +61,7 @@ DATADIR ?= $(DESTDIR)$(PREFIX)/share/crystal
 INSTALL ?= /usr/bin/install
 
 ifeq ($(shell command -v ld.lld >/dev/null && uname -s),Linux)
-  EXPORT_CC ?= CC="$(CC) -fuse-ld=lld"
+  EXPORT_CC ?= CC="$(CC) -fuse-ld=gold"
 endif
 
 ifeq ($(or $(TERM),$(TERM),dumb),dumb)
